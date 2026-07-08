@@ -7,12 +7,10 @@ and hands you the ready-to-file claim with the evidence checklist and where to s
 
 Built as an **Agent Service Provider (A2MCP, pay-per-case)** for the OKX AI Genesis Hackathon.
 
-## Why it wins
+## problem:
 - **A painful money problem, for everyone.** Everyday users (refunds, subscriptions, flights)
   and crypto users (scams, drains, wrong sends) both lose money constantly and usually
   just eat the loss. Recovery is a proven paid service — firms take 20–35%.
-- **The demo is the money.** Paste a delayed flight → the payout counts up to €600, the
-  EU261 regulation is cited, and the claim letter writes itself. Judges *feel* it.
 - **Honest, which builds trust.** For crypto it never promises guaranteed recovery — it
   revokes the approval to stop the bleeding and files the exchange freeze report. That
   honesty is the opposite of the "recovery scams" that plague the space.
