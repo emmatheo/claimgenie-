@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ClaimGenie — the AI agent that gets your money back</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  /* ═══════════════════════════════════════════════════════════════════
+     ClaimGenie — "the case file that wins your money back"
+     Direction: a legal dossier crossed with a bank statement. Ink-black
+     paper stock, a single stamp-red action color, a recovered-green payout.
+     The signature moment: the amount you're owed COUNTS UP as the case
+     assembles — money returning, made literal.
+     One risk, justified: the whole result animates in like evidence being
+     stamped into a folder. Everything else stays disciplined and quiet.
+     ═══════════════════════════════════════════════════════════════════ */
+  :root{
+    --paper:#0e0f13; --paper-2:#14161c; --card:#171a21; --card-2:#1b1f27;
+    --ink:#f4f1ea; --ink-soft:#a6a094; --ink-faint:#6d6a62;
+    --rule:#2a2e38; --rule-soft:#22262f;
+    --stamp:#e0492f; --stamp-soft:#3a1c16;
+    --recovered:#3ecf8e; --recovered-soft:#123626;
+    --gold:#d6a84a; --gold-soft:#332913;
+    --radius:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:"Inter",system-ui,sans-serif;line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(1200px 600px at 78% -12%,#1a1d26 0%,transparent 58%);}
+  .mono{font-family:"JetBrains Mono",monospace}
+  .serif{font-family:"Fraunces",serif}
+  ::selection{background:var(--stamp);color:#fff}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--stamp);outline-offset:2px;border-radius:3px}
+
+  .wrap{max-width:840px;margin:0 auto;padding:32px 22px 90px}
+
+  /* ── masthead ─────────────────────────────────────────────────────── */
+  .mast{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+    border-bottom:1.5px solid var(--ink);padding-bottom:16px}
+  .brand{font-family:"Fraunces",serif;font-weight:900;font-size:34px;letter-spacing:-1px;line-height:1}
+  .brand i{font-style:normal;color:var(--stamp)}
+  .filetag{font-family:"JetBrains Mono";font-size:10.5px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--ink-faint);text-align:right;line-height:1.7}
+  .filetag b{color:var(--ink-soft);font-weight:500}
+
+  .lede{font-family:"Fraunces",serif;font-weight:400;font-size:23px;line-height:1.35;margin-top:22px;max-width:60ch;
+    color:var(--ink)}
+  .lede em{font-style:normal;color:var(--stamp);font-weight:600}
+  .sub{color:var(--ink-soft);font-size:14px;margin-top:8px}
+
+  /* ── intake ───────────────────────────────────────────────────────── */
+  .intake{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+  .intake-h{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--rule-soft);
+    font-family:"JetBrains Mono";font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-faint)}
+  .intake-h .n{width:18px;height:18px;border:1px solid var(--ink-faint);border-radius:50%;display:grid;place-items:center;
+    font-size:10px;color:var(--ink-soft)}
+  .intake-body{padding:18px}
+  .types{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .type{background:var(--paper-2);border:1px solid var(--rule);border-radius:8px;padding:14px 8px;cursor:pointer;
+    text-align:center;transition:border-color .15s,background .15s,transform .08s;position:relative}
+  .type:hover{border-color:var(--ink-faint)}
+  .type:active{transform:scale(.98)}
+  .type .ic{display:block;font-size:22px;margin-bottom:5px;line-height:1}
+  .type .lab{font-size:12.5px;font-weight:500;color:var(--ink-soft)}
+  .type.on{border-color:var(--stamp);background:var(--stamp-soft)}
+  .type.on .lab{color:var(--ink)}
+  .type.on::after{content:"";position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--stamp)}
+
+  .fld-lab{font-family:"JetBrains Mono";font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-faint);
+    display:block;margin:0 0 6px}
+  textarea{width:100%;background:var(--paper-2);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;
+    color:var(--ink);font-family:inherit;font-size:15px;resize:vertical;min-height:88px;line-height:1.5}
+  textarea::placeholder{color:var(--ink-faint)}
+  textarea:focus{border-color:var(--ink-soft);outline:none}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  input.f{width:100%;background:var(--paper-2);border:1px solid var(--rule);border-radius:8px;padding:11px 14px;
+    color:var(--ink);font-family:"JetBrains Mono";font-size:13px}
+  input.f::placeholder{color:var(--ink-faint)}
+  input.f:focus{border-color:var(--ink-soft);outline:none}
+
+  .go{margin-top:16px;width:100%;background:var(--stamp);color:#fff;border:none;border-radius:8px;padding:15px;
+    font-family:"Fraunces",serif;font-weight:600;font-size:17px;cursor:pointer;letter-spacing:.2px;
+    display:flex;align-items:center;justify-content:center;gap:9px;transition:background .15s,transform .08s}
+  .go:hover{background:#d13f28}
+  .go:active{transform:scale(.99)}
+  .go:disabled{opacity:.5;cursor:default}
+  .go .arr{transition:transform .2s}
+  .go:hover .arr{transform:translateX(4px)}
+
+  .examples{margin-top:14px;font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .examples .chip{background:var(--paper-2);border:1px solid var(--rule);color:var(--ink-soft);border-radius:100px;
+    padding:5px 12px;cursor:pointer;font-size:12px;transition:border-color .15s,color .15s}
+  .examples .chip:hover{border-color:var(--stamp);color:var(--ink)}
+
+  /* ── working state ────────────────────────────────────────────────── */
+  .working{display:none;margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:22px}
+  .working.on{display:block}
+  .working-row{display:flex;align-items:center;gap:12px;padding:9px 0;color:var(--ink-faint);font-size:14px;
+    font-family:"JetBrains Mono";opacity:.35;transition:opacity .3s,color .3s}
+  .working-row.active{opacity:1;color:var(--ink-soft)}
+  .working-row.done{opacity:1;color:var(--recovered)}
+  .working-row .dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+  .working-row .spin{width:14px;height:14px;border:2px solid var(--rule);border-top-color:var(--stamp);border-radius:50%;
+    animation:spin .7s linear infinite;flex:none;display:none}
+  .working-row.active .spin{display:block}
+  .working-row.active .dot{display:none}
+
+  /* ── result: the case file ────────────────────────────────────────── */
+  .out{display:none;margin-top:26px}
+  .out.on{display:block}
+  .stagger{opacity:0;transform:translateY(10px);animation:rise .5s cubic-bezier(.2,.7,.3,1) forwards}
+
+  .payout{position:relative;background:var(--card);border:1.5px solid var(--ink);border-radius:12px;
+    padding:26px 22px 22px;text-align:center;overflow:hidden}
+  .payout::before{content:"";position:absolute;inset:0;background-image:
+    repeating-linear-gradient(90deg,transparent,transparent 6px,rgba(255,255,255,.012) 6px,rgba(255,255,255,.012) 7px);
+    pointer-events:none}
+  .stampmark{position:absolute;top:16px;right:-2px;background:var(--recovered);color:#04160d;
+    font-family:"JetBrains Mono";font-weight:700;font-size:11px;letter-spacing:1.5px;padding:5px 14px;
+    text-transform:uppercase;transform:rotate(2.5deg);border-radius:3px}
+  .payout .cap{font-family:"JetBrains Mono";font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft)}
+  .amt{font-family:"Fraunces",serif;font-weight:900;font-size:68px;line-height:1.05;color:var(--recovered);
+    font-variant-numeric:tabular-nums;letter-spacing:-1.5px;margin:2px 0 4px}
+  .conf{font-size:13px;color:var(--ink-soft);font-family:"JetBrains Mono"}
+  .conf b{color:var(--ink)}
+  .barwrap{max-width:260px;margin:12px auto 0;height:4px;background:var(--paper);border-radius:100px;overflow:hidden}
+  .bar{height:100%;background:var(--recovered);width:0;transition:width 1s cubic-bezier(.2,.7,.3,1)}
+
+  .sect{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:18px;margin-top:12px}
+  .sect-h{font-family:"JetBrains Mono";font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-faint);
+    margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .sect-h .ic{font-size:14px}
+
+  .cite{border-left:3px solid var(--gold);border-radius:0;padding:4px 0 4px 14px}
+  .cite .t{font-family:"Fraunces",serif;font-weight:600;font-size:18px;line-height:1.25}
+  .cite .a{color:var(--gold);font-size:13px;font-weight:500;margin-top:3px;font-family:"JetBrains Mono"}
+  .cite .r{color:var(--ink-faint);font-size:12px;margin-top:2px}
+  .reason{margin-top:12px;font-size:15px;line-height:1.6;color:var(--ink)}
+
+  .check{list-style:none}
+  .check li{display:flex;align-items:center;gap:11px;padding:9px 0;font-size:14.5px;border-bottom:1px solid var(--rule-soft)}
+  .check li:last-child{border-bottom:none}
+  .check .box{width:20px;height:20px;border:1.5px solid var(--ink-faint);border-radius:4px;display:grid;place-items:center;
+    font-size:12px;flex:none}
+  .check .box.have{background:var(--recovered);border-color:var(--recovered);color:#04160d}
+  .check .miss{margin-left:auto;font-family:"JetBrains Mono";font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;
+    color:var(--stamp);background:var(--stamp-soft);padding:3px 9px;border-radius:100px}
+
+  .artifact{position:relative}
+  .art-tag{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:var(--paper);font-family:"JetBrains Mono";
+    font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 11px;border-radius:4px;margin-bottom:10px}
+  .paper-doc{background:#f6f3ec;color:#1a1a18;border-radius:6px;padding:18px 20px;font-family:"JetBrains Mono";
+    font-size:12.5px;line-height:1.7;white-space:pre-wrap;position:relative;
+    box-shadow:0 1px 0 #d8d3c6, 0 2px 0 #cbc6b8}
+  .paper-doc::before{content:"";position:absolute;left:14px;top:0;bottom:0;width:1px;background:#e7c9c0}
+  .copy{position:absolute;top:0;right:0;background:var(--paper-2);color:var(--ink-soft);border:1px solid var(--rule);
+    border-radius:6px;padding:7px 13px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:500;
+    display:flex;align-items:center;gap:6px;transition:border-color .15s,color .15s}
+  .copy:hover{border-color:var(--ink-soft);color:var(--ink)}
+  .channel{margin-top:10px;font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:7px}
+  .channel .ic{color:var(--stamp)}
+
+  .honest{background:var(--gold-soft);border:1px solid #4a3d1c;border-radius:10px;padding:13px 15px;margin-top:12px;
+    font-size:13.5px;line-height:1.55;color:#e8c983}
+  .honest b{color:var(--gold)}
+
+  .steps{list-style:none;counter-reset:s}
+  .steps li{counter-increment:s;position:relative;padding:11px 0 11px 40px;font-size:14.5px;border-bottom:1px solid var(--rule-soft)}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:26px;height:26px;background:var(--stamp);
+    color:#fff;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;font-family:"JetBrains Mono"}
+
+  .foot{margin-top:34px;text-align:center;color:var(--ink-faint);font-size:12px;line-height:1.7}
+  .foot .dot{color:var(--rule)}
+
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+  @media (max-width:600px){
+    .types{grid-template-columns:repeat(2,1fr)}
+    .grid2{grid-template-columns:1fr}
+    .amt{font-size:52px}
+    .brand{font-size:28px}
+    .lede{font-size:20px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.stagger{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div class="brand">Claim<i>Genie</i></div>
+    <div class="filetag">Case File №<b id="caseno">0000</b><br/>AI Recovery Agent<br/><b>Status:</b> ready</div>
+  </header>
+
+  <p class="lede">You lost money. Most people just <em>eat the loss</em>. This agent builds the case — and gets it back.</p>
+  <p class="sub">Refunds · subscriptions · flight delays · crypto scams. One input, the exact claim, the rule that entitles you.</p>
+
+  <section class="intake">
+    <div class="intake-h"><span class="n">1</span> What happened</div>
+    <div class="intake-body">
+      <div class="types" id="types">
+        <div class="type on" data-type="merchant"><span class="ic">📦</span><span class="lab">Bad order</span></div>
+        <div class="type" data-type="subscription"><span class="ic">🔁</span><span class="lab">Subscription</span></div>
+        <div class="type" data-type="travel"><span class="ic">✈️</span><span class="lab">Flight / travel</span></div>
+        <div class="type" data-type="crypto"><span class="ic">🪙</span><span class="lab">Crypto loss</span></div>
+      </div>
+      <label class="fld-lab" for="desc">Tell me in your own words</label>
+      <textarea id="desc" placeholder="My flight from Lagos to London was delayed 5 hours, no reason given…"></textarea>
+      <div class="grid2">
+        <div><label class="fld-lab" for="amount">Amount lost</label><input class="f" id="amount" placeholder="$340 · 0.5 ETH · €600" /></div>
+        <div><label class="fld-lab" for="region">Region</label><input class="f" id="region" placeholder="EU · US · UK · on-chain" /></div>
+      </div>
+      <button class="go" id="go">Build my case <span class="arr">→</span></button>
+      <div class="examples"><span>Try:</span>
+        <span class="chip" data-ex="travel">delayed flight</span>
+        <span class="chip" data-ex="merchant">order never arrived</span>
+        <span class="chip" data-ex="subscription">charged after cancelling</span>
+        <span class="chip" data-ex="crypto">approved a scam contract</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="working" id="working">
+    <div class="working-row" data-step="0"><span class="dot"></span><span class="spin"></span>reading what happened</div>
+    <div class="working-row" data-step="1"><span class="dot"></span><span class="spin"></span>matching your rights against the rules</div>
+    <div class="working-row" data-step="2"><span class="dot"></span><span class="spin"></span>assessing recovery odds</div>
+    <div class="working-row" data-step="3"><span class="dot"></span><span class="spin"></span>drafting your filing</div>
+  </section>
+
+  <section class="out" id="out">
+    <div class="payout stagger" style="animation-delay:.05s">
+      <span class="stampmark" id="stamp">recoverable</span>
+      <div class="cap">You're owed</div>
+      <div class="amt" id="amt">$0</div>
+      <div class="conf" id="conf"></div>
+      <div class="barwrap"><div class="bar" id="bar"></div></div>
+    </div>
+
+    <div class="sect stagger" style="animation-delay:.15s">
+      <div class="sect-h"><span class="ic">⚖️</span>The rule on your side</div>
+      <div class="cite">
+        <div class="t" id="ruleT"></div>
+        <div class="a" id="ruleA"></div>
+        <div class="r" id="ruleR"></div>
+      </div>
+      <div class="reason" id="reason"></div>
+    </div>
+
+    <div class="sect stagger" style="animation-delay:.25s">
+      <div class="sect-h"><span class="ic">📎</span>Evidence checklist</div>
+      <ul class="check" id="check"></ul>
+    </div>
+
+    <div class="sect artifact stagger" style="animation-delay:.35s">
+      <div class="sect-h"><span class="ic">✍️</span>Your ready-to-file claim</div>
+      <button class="copy" id="copy">⧉ Copy</button>
+      <div class="art-tag" id="artTag"></div>
+      <div class="paper-doc" id="artDoc"></div>
+      <div class="channel"><span class="ic">→</span><span id="artCh"></span></div>
+    </div>
+
+    <div class="honest stagger" id="honest" style="animation-delay:.4s"></div>
+
+    <div class="sect stagger" style="animation-delay:.45s">
+      <div class="sect-h"><span class="ic">▶</span>Next steps</div>
+      <ol class="steps" id="steps"></ol>
+    </div>
+  </section>
+
+  <p class="foot">ClaimGenie <span class="dot">·</span> an AI recovery agent for OKX.AI <span class="dot">·</span> guidance, not legal advice — review before filing</p>
+</div>
+
+<script>
+  const API=(window.CLAIMGENIE_API||"").replace(/\/$/,"")||location.origin;
+  const $=id=>document.getElementById(id);
+  let type="merchant";
+  $("caseno").textContent=String(Math.floor(1000+Math.random()*9000));
+
+  const examples={
+    travel:{desc:"My flight from Lagos to London on BA075 was delayed 5 hours 20 minutes, arrived very late, no explanation given. The distance is over 3,500 km.",amount:"€600",region:"EU/UK"},
+    merchant:{desc:"I ordered $340 headphones online and paid by card. It's 3 weeks past the delivery date, tracking shows nothing, and the seller stopped replying.",amount:"$340",region:"US"},
+    subscription:{desc:"I cancelled my streaming trial on the 3rd and have the confirmation email, but they've charged me $19.99 three times since then.",amount:"$59.97",region:"US"},
+    crypto:{desc:"I connected my wallet to a site that looked legit and approved a token spend. My USDC got drained and the funds moved to a Binance deposit address.",amount:"$1,200",region:"on-chain"},
+  };
+
+  document.querySelectorAll(".type").forEach(t=>t.onclick=()=>{
+    document.querySelectorAll(".type").forEach(x=>x.classList.remove("on"));
+    t.classList.add("on");type=t.dataset.type;
+  });
+  document.querySelectorAll("[data-ex]").forEach(b=>b.onclick=()=>{
+    const ex=b.dataset.ex;type=ex;
+    document.querySelectorAll(".type").forEach(x=>x.classList.toggle("on",x.dataset.type===ex));
+    $("desc").value=examples[ex].desc;$("amount").value=examples[ex].amount;$("region").value=examples[ex].region;
+  });
+  $("copy").onclick=()=>{navigator.clipboard.writeText($("artDoc").textContent);$("copy").innerHTML="✓ Copied";setTimeout(()=>$("copy").innerHTML="⧉ Copy",1500);};
+
+  $("go").onclick=async()=>{
+    const description=$("desc").value.trim();
+    if(!description){$("desc").focus();return;}
+    $("go").disabled=true;$("out").classList.remove("on");
+    $("working").classList.add("on");
+    $("caseno").textContent=String(Math.floor(1000+Math.random()*9000));
+    runWorking();
+    const started=Date.now();
+    let res;
+    try{
+      const r=await fetch(API+"/v1/recover",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({type,description,amount:$("amount").value,region:$("region").value})});
+      res=await r.json();
+    }catch(e){
+      $("working").innerHTML='<div class="working-row active" style="opacity:1;color:var(--stamp)">Couldn\'t reach the recovery service — is it running?</div>';
+      $("go").disabled=false;return;
+    }
+    const elapsed=Date.now()-started;
+    setTimeout(()=>{$("working").classList.remove("on");resetWorking();render(res);$("go").disabled=false;},Math.max(0,2200-elapsed));
+  };
+
+  function runWorking(){
+    const rows=[...document.querySelectorAll(".working-row")];
+    rows.forEach(r=>r.className="working-row");
+    let i=0;
+    rows[0].classList.add("active");
+    const h=setInterval(()=>{
+      rows[i].classList.remove("active");rows[i].classList.add("done");
+      i++;
+      if(i>=rows.length){clearInterval(h);return;}
+      rows[i].classList.add("active");
+    },520);
+  }
+  function resetWorking(){document.querySelectorAll(".working-row").forEach(r=>r.className="working-row");}
+
+  function render(res){
+    animateAmount(res.amountOwed);
+    const map={recoverable:["recoverable","var(--recovered)","#04160d"],partial:["act fast","var(--gold)","#1a1405"],unlikely:["limited","var(--ink-soft)","#0e0f13"]};
+    const s=map[res.verdict]||map.recoverable;
+    const st=$("stamp");st.textContent=s[0];st.style.background=s[1];st.style.color=s[2];
+    $("conf").innerHTML=`<b>${res.confidence}%</b> confidence &nbsp;·&nbsp; verdict: <b>${res.verdict}</b>`;
+    setTimeout(()=>$("bar").style.width=res.confidence+"%",120);
+    $("ruleT").textContent=res.ruleApplied.title;
+    $("ruleA").textContent=res.ruleApplied.authority;
+    $("ruleR").textContent=res.ruleApplied.region;
+    $("reason").textContent=res.reasoning;
+    $("check").innerHTML=(res.evidenceChecklist||[]).map(c=>
+      `<li><span class="box ${c.have?"have":""}">${c.have?"✓":""}</span>${c.item}${c.have?"":'<span class="miss">need this</span>'}</li>`).join("");
+    $("artTag").textContent=res.artifact.kind;
+    $("artDoc").textContent=res.artifact.content;
+    $("artCh").textContent="File at: "+res.artifact.channel;
+    $("honest").innerHTML="<b>Straight talk — </b>"+res.honestNote;
+    $("steps").innerHTML=(res.nextSteps||[]).map(s=>`<li>${s}</li>`).join("");
+    const out=$("out");out.classList.add("on");
+    out.querySelectorAll(".stagger").forEach(el=>{el.style.animation="none";el.offsetHeight;el.style.animation="";});
+    out.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  function animateAmount(text){
+    const m=String(text).match(/([^\d]*)([\d,\.]+)(.*)/);
+    if(!m){$("amt").textContent=text;$("amt").style.fontSize="34px";return;}
+    $("amt").style.fontSize="";
+    const pre=m[1],target=parseFloat(m[2].replace(/,/g,"")),post=m[3];
+    let i=0;const steps=34;const fmt=n=>pre+Math.round(n).toLocaleString()+post;
+    const ease=t=>1-Math.pow(1-t,3);
+    const h=setInterval(()=>{i++;const p=ease(i/steps);$("amt").textContent=fmt(target*p);
+      if(i>=steps){$("amt").textContent=fmt(target);clearInterval(h);}},20);
+  }
+</script>
+</body>
+</html>

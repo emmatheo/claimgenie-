@@ -1,0 +1,17 @@
+{
+  "name": "claimgenie",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AI money-recovery agent — get back money you've written off. ASP for OKX.AI.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "dependencies": { "express": "^4.21.2" },
+  "devDependencies": {
+    "@types/express": "^5.0.0", "@types/node": "^22.10.5",
+    "tsx": "^4.19.2", "typescript": "^5.7.2"
+  }
+}
